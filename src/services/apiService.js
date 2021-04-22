@@ -22,7 +22,7 @@ export async function getDataAuth(url = "") {
   const response = await fetch(API_URL + url, {
     method: "GET",
     mode: "cors",
-    cache: "no-cache",
+    cache: "force-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
