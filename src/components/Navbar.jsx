@@ -11,12 +11,13 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Container,
+  Switch,
   useDisclosure,
   useColorModeValue,
   Stack,
+  useColorMode,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, MoonIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router";
 import { authenticationService } from "../services/authenticationService";
 
@@ -45,6 +46,7 @@ function logout(history) {
 export default function Navbar() {
   let history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <>
@@ -71,6 +73,11 @@ export default function Navbar() {
           </HStack>
           <Flex alignItems={"center"}>
             <Menu>
+              <Switch
+                size="lg"
+                defaultChecked={colorMode}
+                onChange={toggleColorMode}
+              />
               <MenuButton
                 as={Button}
                 rounded={"full"}
