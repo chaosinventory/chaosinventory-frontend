@@ -7,20 +7,18 @@ export const authenticationService = {
   logout,
 };
 
-const KEY_TOKEN = "token";
-
 function login(username, password) {
   postData("/api/authentication/token/credentials", {
     username: username,
     password: password,
     application: "chaosinventory",
   }).then((data) => {
-    localStorage.setItem(KEY_TOKEN, data.token);
+    localStorage.setItem(import.meta.env.VITE_TOKEN_NAME, data.token);
   });
 }
 
 function loggedIn() {
-  return localStorage.getItem(KEY_TOKEN) != null;
+  return localStorage.getItem(import.meta.env.VITE_TOKEN_NAME) != null;
 }
 
 function renewToken() {}
@@ -32,5 +30,5 @@ function getTokens() {
 }
 
 function logout() {
-  localStorage.removeItem(KEY_TOKEN);
+  localStorage.removeItem(import.meta.env.VITE_TOKEN_NAME);
 }

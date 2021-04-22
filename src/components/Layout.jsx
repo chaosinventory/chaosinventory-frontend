@@ -8,13 +8,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Footer from "./Footer";
+import Navbar from "./Navbar";
 import { useHistory } from "react-router";
-import { authenticationService } from "../services/authenticationService";
-
-function logout(history) {
-  authenticationService.logout();
-  history.push("/login");
-}
 
 export default function Layout(props) {
   let history = useHistory();
@@ -27,17 +22,7 @@ export default function Layout(props) {
         justify={"space-between"}
         flexDirection={"column"}
       >
-        <Box>
-          <Text>Navbar</Text>
-          <Button
-            onClick={() => {
-              logout(history);
-            }}
-          >
-            Logout
-          </Button>
-        </Box>
-
+        <Navbar />
         <Box>{props.children}</Box>
         <Footer />
       </Flex>
