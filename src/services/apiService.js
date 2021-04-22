@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:8000";
+const API_URL = `${import.meta.env.VITE_API_PROTOCOL}://${
+  import.meta.env.VITE_API_DOMAIN
+}:${import.meta.env.VITE_API_PORT}`;
 const KEY_TOKEN = "token";
 
 export async function postData(url = "", data = {}) {
