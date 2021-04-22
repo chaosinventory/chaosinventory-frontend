@@ -1,7 +1,6 @@
 const API_URL = `${import.meta.env.VITE_API_PROTOCOL}://${
   import.meta.env.VITE_API_DOMAIN
 }:${import.meta.env.VITE_API_PORT}`;
-const KEY_TOKEN = "token";
 
 export async function postData(url = "", data = {}) {
   const response = await fetch(API_URL + url, {
@@ -27,7 +26,8 @@ export async function getDataAuth(url = "") {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Token " + localStorage.getItem(KEY_TOKEN),
+      Authorization:
+        "Token " + localStorage.getItem(import.meta.env.VITE_TOKEN_NAME),
     },
     redirect: "follow",
     referrerPolicy: "no-referrer",
@@ -59,7 +59,8 @@ async function apiInteractionAuth(url = "", data = {}, method = "POST") {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Token " + localStorage.getItem(KEY_TOKEN),
+      Authorization:
+        "Token " + localStorage.getItem(import.meta.env.VITE_TOKEN_NAME),
     },
     redirect: "follow",
     referrerPolicy: "no-referrer",
