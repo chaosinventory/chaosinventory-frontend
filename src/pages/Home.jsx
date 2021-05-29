@@ -1,17 +1,12 @@
 import React from "react";
-import { Heading } from "@chakra-ui/react";
+import ItemView from "../components/item/ItemView";
 import Layout from "../components/Layout";
-import { getDataAuth, postDataAuth } from "../services/apiService";
-import { getTags } from "../services/tagService";
+import LocationView from "../components/location/LocationView";
 
 export default function Home() {
-  getTags().then((data) => {
-    console.log(data);
-  });
-
   return (
     <Layout>
-      <Heading fontSize={"4xl"}>Welcome to Chaosinventory</Heading>
+      <ItemView fetchData id="1" />
     </Layout>
   );
 }
