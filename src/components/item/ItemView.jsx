@@ -49,7 +49,7 @@ export default function ItemView(props) {
           <Text fontWeight="bold">{componentData.name}</Text>
         </Tooltip>
         <Text>Tags</Text>
-        <TagList data={componentData.tags} />
+        {/** <TagList data={componentData.tags} /> */}
       </SimpleGrid>
       <br></br>
       <Divider />

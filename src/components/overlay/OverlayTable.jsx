@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getItems } from "../../services/itemService";
-import {
-  Alert,
-  AlertIcon,
-  Table,
-  Thead,
-  Tbody,
-  Spinner,
-  Tr,
-  Th,
-  Td,
-  HStack,
-} from "@chakra-ui/react";
+import { Spinner, Table, Thead, Tr, Th, Tbody, Td } from "@chakra-ui/react";
+import { CheckIcon } from "@chakra-ui/icons";
+import { getOverlays } from "../../services/overlayService";
 
-export default function ItemTable() {
+export default function OverlayTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    getItems().then(
+    getOverlays().then(
       (data) => {
         console.log(data);
         setIsLoaded(true);
@@ -46,22 +36,17 @@ export default function ItemTable() {
       <Table variant="simple">
         <Thead>
           <Tr>
+            <Th>Active</Th>
             <Th>Name</Th>
-            <Th>Typ</Th>
-            <Th>Amount</Th>
-            <Th>Location</Th>
-            <Th>Belongs to</Th>
-            <Th>Tags</Th>
+            <Th>Note</Th>
           </Tr>
         </Thead>
         <Tbody>
           {items.map((item) => (
             <Tr key={item.id}>
-            <Td>{item.name}</Td>
-            <Td>{item.product.name}</Td>
-            <Td>{item.amount}</Td>
-            <Td>{item.actual_location.name}</Td>
-            <Td>{item.actual_item != null ? <>?</> : <>...</>}</Td>
+              <Td>{item.active ? <CheckIcon /> : null}</Td>
+              <Td>{item.name}</Td>
+              <Td>{item.note}</Td>
             </Tr>
           ))}
         </Tbody>

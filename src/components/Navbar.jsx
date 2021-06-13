@@ -19,23 +19,33 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, MoonIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router";
+import { Link as RouterLink } from "react-router-dom";
 import { authenticationService } from "../services/authenticationService";
 
-const Links = ["Dashboard"];
+const Links = [
+  { name: "Items", link: "/items" },
+  { name: "Products", link: "/products" },
+  { name: "Overlays", link: "/overlays" },
+  { name: "Locations", link: "/locations" },
+  { name: "Tags", link: "/tags" },
+  { name: "Entities", link: "/entities" },
+  { name: "Data types", link: "/datatypes" },
+];
 
 const NavLink = ({ children }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"#"}
-  >
-    {children}
-  </Link>
+  <RouterLink to={children.link}>
+    <Link
+      px={2}
+      py={1}
+      rounded={"md"}
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+    >
+      {children.name}
+    </Link>
+  </RouterLink>
 );
 
 function logout(history) {

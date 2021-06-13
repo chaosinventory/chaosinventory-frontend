@@ -1,25 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getItems } from "../../services/itemService";
-import {
-  Alert,
-  AlertIcon,
-  Table,
-  Thead,
-  Tbody,
-  Spinner,
-  Tr,
-  Th,
-  Td,
-  HStack,
-} from "@chakra-ui/react";
+import { Spinner, Table, Thead, Tr, Th, Tbody, Td } from "@chakra-ui/react";
+import { getEntities } from "../../services/entityService";
+import TagList from "../tag/TagList";
 
-export default function ItemTable() {
+export default function EntityTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    getItems().then(
+    getEntities().then(
       (data) => {
         console.log(data);
         setIsLoaded(true);
@@ -47,21 +37,20 @@ export default function ItemTable() {
         <Thead>
           <Tr>
             <Th>Name</Th>
-            <Th>Typ</Th>
-            <Th>Amount</Th>
-            <Th>Location</Th>
-            <Th>Belongs to</Th>
+            <Th>Note</Th>
+            <Th>Part of</Th>
             <Th>Tags</Th>
           </Tr>
         </Thead>
         <Tbody>
           {items.map((item) => (
             <Tr key={item.id}>
-            <Td>{item.name}</Td>
-            <Td>{item.product.name}</Td>
-            <Td>{item.amount}</Td>
-            <Td>{item.actual_location.name}</Td>
-            <Td>{item.actual_item != null ? <>?</> : <>...</>}</Td>
+              <Td>{item.name}</Td>
+              <Td>{item.note}</Td>
+              <Td>{item.part_of ? item.part_of.name : "Nothing"}</Td>
+              <Td>
+                <TagList data={item.tags} />
+              </Td>
             </Tr>
           ))}
         </Tbody>
