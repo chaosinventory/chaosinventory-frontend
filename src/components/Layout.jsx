@@ -7,7 +7,7 @@ import {
   Button,
   useColorModeValue,
   Container,
-  Stack
+  Stack,
 } from "@chakra-ui/react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
@@ -18,25 +18,21 @@ export default function Layout(props) {
 
   return (
     <>
-      <Flex
-        minH={"100vh"}
-        flexDirection={"column"}
-      >
+      <Flex minH={"100vh"} flexDirection={"column"}>
         <Navbar />
-        <Box>
-          
-      <Container
-        as={Stack}
-        maxW={"6xl"}
-        py={4}
-        direction={{ base: "column", md: "row" }}
-        spacing={4}
-        justify={{ base: "center", md: "space-between" }}
-        align={{ base: "center", md: "center" }}
-      >
-          {props.children}
+        <Box flex={1}>
+          <Container
+            as={Stack}
+            maxW={"7xl"}
+            py={4}
+            direction={{ base: "column", md: "row" }}
+            spacing={4}
+            justify={{ base: "center", md: "space-between" }}
+            align={{ base: "flex-start", md: "flex-start" }}
+          >
+            {props.children}
           </Container>
-          </Box>
+        </Box>
         <Footer />
       </Flex>
     </>
