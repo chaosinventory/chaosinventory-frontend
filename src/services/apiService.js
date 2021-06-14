@@ -15,14 +15,21 @@ export async function postData(url = "", data = {}) {
     referrerPolicy: "no-referrer",
     body: JSON.stringify(data),
   });
-  return response.json();
+
+  return new Promise((resolve, reject) => {
+    if (response.ok) {
+      resolve(response.json());
+    } else {
+      reject(new Error("request failed"));
+    }
+  });
 }
 
 export async function getDataAuth(url = "") {
   const response = await fetch(API_URL + url, {
     method: "GET",
     mode: "cors",
-    cache: "no-cache",
+    // cache: "force-cache",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
@@ -32,7 +39,14 @@ export async function getDataAuth(url = "") {
     redirect: "follow",
     referrerPolicy: "no-referrer",
   });
-  return response.json();
+
+  return new Promise((resolve, reject) => {
+    if (response.ok) {
+      resolve(response.json());
+    } else {
+      reject(new Error("request failed"));
+    }
+  });
 }
 
 export async function postDataAuth(url = "", data = {}) {
@@ -66,5 +80,12 @@ async function apiInteractionAuth(url = "", data = {}, method = "POST") {
     referrerPolicy: "no-referrer",
     body: JSON.stringify(data),
   });
-  return response.json();
+
+  return new Promise((resolve, reject) => {
+    if (response.ok) {
+      resolve(response.json());
+    } else {
+      reject(new Error("request failed"));
+    }
+  });
 }

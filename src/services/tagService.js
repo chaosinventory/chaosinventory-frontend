@@ -20,18 +20,12 @@ export async function putTag(id, name, parent) {
   });
 }
 
-export async function patchTag(id, name, parent) {
-  return await patchDataAuth(`/api/tag/${id}/`, {
-    name: name,
-    parent: parent,
-  });
+export async function patchTag(id, data) {
+  return await patchDataAuth(`/api/tag/${id}/`, data);
 }
 
-export async function postTag(name, parent) {
-  return await postDataAuth("/api/tag/", {
-    name: name,
-    parent: parent,
-  });
+export async function postTag(data) {
+  return await postDataAuth("/api/tag/", data);
 }
 
 export async function deleteTag(id) {
