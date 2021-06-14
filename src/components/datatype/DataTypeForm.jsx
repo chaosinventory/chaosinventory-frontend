@@ -1,21 +1,12 @@
-import {
-  FormLabel,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  Button,
-  Textarea,
-  useToast,
-} from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import {
-  patchDatatype,
-  postDatatype,
-  putDatatype,
-} from "../../services/datatypeService";
+import { patchDatatype, postDatatype } from "../../services/datatypeService";
 import PropTypes from "prop-types";
 import DataUpdateContext from "../../context/DataUpdateContext";
+import NameInput from "../input/NameInput";
+import NoteInput from "../input/NoteInput";
+import { SubmitButton } from "../button/Button";
+import { useCiToast } from "../../hooks/Toast";
 
 function DataTypeForm({ type, id, data }) {
   const {
@@ -23,7 +14,7 @@ function DataTypeForm({ type, id, data }) {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-  const toast = useToast();
+  const toast = useCiToast();
   const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
   let onSubmit;
 
@@ -33,22 +24,16 @@ function DataTypeForm({ type, id, data }) {
         (data) => {
           setLastUpdate(Date.now());
           toast({
+            status: "success",
             title: "Created",
             description: `The datatype ${data.name} with the id ${data.id} has been updated`,
-            status: "success",
-            position: "top",
-            duration: 9000,
-            isClosable: true,
           });
         },
         (err) => {
           toast({
+            status: "error",
             title: "Error",
             description: err.message,
-            status: "error",
-            position: "top",
-            duration: 9000,
-            isClosable: true,
           });
         }
       );
@@ -59,22 +44,16 @@ function DataTypeForm({ type, id, data }) {
         (data) => {
           setLastUpdate(Date.now());
           toast({
+            status: "success",
             title: "Created",
             description: `The datatype ${data.name} with the id ${data.id} has been created`,
-            status: "success",
-            position: "top",
-            duration: 9000,
-            isClosable: true,
           });
         },
         (err) => {
           toast({
+            status: "error",
             title: "Error",
             description: err.message,
-            status: "error",
-            position: "top",
-            duration: 9000,
-            isClosable: true,
           });
         }
       );
@@ -83,31 +62,21 @@ function DataTypeForm({ type, id, data }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={errors.name}>
-        <FormLabel htmlFor="name">Name</FormLabel>
-        <Input
-          defaultValue={type === "edit" ? data.name : null}
-          name="name"
-          placeholder="Name"
-          {...register("name", { required: "Name is required!" })}
-        />
-        <FormErrorMessage>
-          {errors.name && errors.name.message}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl mt={4}>
-        <FormLabel htmlFor="note">Note</FormLabel>
-        <Textarea
-          defaultValue={type === "edit" ? data.note : null}
-          name="note"
-          placeholder="Note"
-          {...register("note")}
-        />
-      </FormControl>
-
-      <Button mt={4} isLoading={isSubmitting} colorScheme="green" type="submit">
-        Submit
-      </Button>
+      <NameInput
+        required
+        isInvalid={errors.name}
+        defaultValue={type === "edit" ? data.name : null}
+        errors={errors.name && errors.name.message}
+        {...register("name", { required: "Name is required!" })}
+      />
+      <NoteInput
+        topMargin
+        isInvalid={errors.note}
+        defaultValue={type === "edit" ? data.note : null}
+        errors={errors.note && errors.note.message}
+        {...register("note")}
+      />
+      <SubmitButton mt={4} isLoading={isSubmitting} />
     </form>
   );
 }

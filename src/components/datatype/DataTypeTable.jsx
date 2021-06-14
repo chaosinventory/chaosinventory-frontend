@@ -21,6 +21,7 @@ import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { deleteDatatype, getDatatypes } from "../../services/datatypeService";
 import DataTypeForm from "./DataTypeForm";
 import DataUpdateContext from "../../context/DataUpdateContext";
+import { DeleteButton, EditButton } from "../button/Button";
 
 export default function DataTypeTable() {
   const [error, setError] = useState(null);
@@ -59,6 +60,7 @@ export default function DataTypeTable() {
         <Table variant="simple" size="sm">
           <Thead>
             <Tr>
+              <Th>ID</Th>
               <Th>Name</Th>
               <Th>Note</Th>
               <Th></Th>
@@ -67,33 +69,22 @@ export default function DataTypeTable() {
           <Tbody>
             {items.map((item) => (
               <Tr key={item.id}>
+                <Td>#{item.id}</Td>
                 <Td>{item.name}</Td>
                 <Td>{item.note}</Td>
-                <Td textAlign="right  ">
-                  <Button
+                <Td textAlign="right">
+                  <EditButton
                     onClick={() => {
                       setSelectedData(item);
                       onOpen();
                     }}
-                    leftIcon={<EditIcon />}
-                    size="sm"
-                    colorScheme="blue"
-                    variant="ghost"
-                  >
-                    Edit
-                  </Button>
-                  <Button
+                  />
+                  <DeleteButton
                     onClick={() => {
                       deleteDatatype(item.id);
                       setLastUpdate(Date.now());
                     }}
-                    leftIcon={<DeleteIcon />}
-                    size="sm"
-                    colorScheme="red"
-                    variant="ghost"
-                  >
-                    Delete
-                  </Button>
+                  />
                 </Td>
               </Tr>
             ))}

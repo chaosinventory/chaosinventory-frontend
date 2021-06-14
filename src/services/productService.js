@@ -11,3 +11,7 @@ export async function getProduct(id) {
 export async function postProduct(data) {
   return await postDataAuth("/api/product/", data);
 }
+
+export async function patchProduct(id, data) {
+  return await patchDataAuth(`/api/product/${id}/`, data);
+}

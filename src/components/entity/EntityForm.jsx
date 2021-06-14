@@ -1,78 +1,91 @@
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  FormLabel,
-  FormControl,
-  Input,
-  Select,
-  Button,
-  Textarea,
-  Spinner,
-  Alert,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Button } from "@chakra-ui/react";
+import React from "react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { postEntity } from "../../services/entityService";
-import { getProducts } from "../../services/productService";
+import DataUpdateContext from "../../context/DataUpdateContext";
+import { patchEntity, postEntity } from "../../services/entityService";
+import NameInput from "../input/NameInput";
+import NoteInput from "../input/NoteInput";
+import { useCiToast } from "../../hooks/Toast";
+import ProductSelect from "../product/ProductSelect";
+import { SubmitButton } from "../button/Button";
 
-export default function EntityForm() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [data, setData] = useState([]);
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-    postEntity(data);
-  };
+export default function EntityForm({ type, id, data }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  const toast = useCiToast();
+  const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
+  let onSubmit;
 
-  useEffect(() => {
-    getProducts().then(
-      (d) => {
-        setIsLoaded(true);
-        setData(d);
-      },
-      (e) => {
-        setIsLoaded(true);
-        setError(e);
-      }
-    );
-  }, []);
-
-  if (error) {
-    return <Alert status="error">{error.message}</Alert>;
-  } else if (!isLoaded) {
-    return <Spinner />;
+  if (type === "edit") {
+    onSubmit = (data) => {
+      patchEntity(id, data).then(
+        (data) => {
+          setLastUpdate(Date.now());
+          toast({
+            status: "success",
+            title: "Created",
+            description: `The datatype ${data.name} with the id ${data.id} has been updated`,
+          });
+        },
+        (err) => {
+          toast({
+            status: "error",
+            title: "Error",
+            description: err.message,
+          });
+        }
+      );
+    };
   } else {
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <FormLabel htmlFor="name">Name</FormLabel>
-          <Input name="name" placeholder="name" {...register("name")} />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="name">Note</FormLabel>
-          <Textarea name="note" placeholder="note" {...register("note")} />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="part_of">Part of</FormLabel>
-          <Select
-            placeholder="Select option"
-            name="part_of"
-            {...register("part_of", { valueAsNumber: true })}
-          >
-            {data.map((product) => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Button type="submit">Submit</Button>
-      </form>
-    );
+    onSubmit = (data) => {
+      postEntity(data).then(
+        (data) => {
+          setLastUpdate(Date.now());
+          toast({
+            status: "success",
+            title: "Created",
+            description: `The entity ${data.name} with the id ${data.id} has been created`,
+          });
+        },
+        (err) => {
+          toast({
+            status: "error",
+            title: "Error",
+            description: err.message,
+          });
+        }
+      );
+    };
   }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <NameInput
+        required
+        isInvalid={errors.name}
+        defaultValue={type === "edit" ? data.name : null}
+        errors={errors.name && errors.name.message}
+        {...register("name", { required: "Name is required!" })}
+      />
+      <NoteInput
+        topMargin
+        isInvalid={errors.note}
+        defaultValue={type === "edit" ? data.note : null}
+        errors={errors.note && errors.note.message}
+        {...register("note")}
+      />
+      <ProductSelect
+        topMargin
+        label="Part Of"
+        name="part_of"
+        {...register("part_of", { valueAsNumber: true })}
+      />
+
+      <SubmitButton mt={4} isLoading={isSubmitting} />
+    </form>
+  );
 }

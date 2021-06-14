@@ -1,74 +1,79 @@
-import React, { useEffect, useState } from "react";
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  FormLabel,
-  FormControl,
-  Input,
-  Select,
-  Button,
-  Textarea,
-  Spinner,
-  Alert,
-} from "@chakra-ui/react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { getProducts } from "../../services/productService";
-import { getTags, postTag } from "../../services/tagService";
+import TagSelectSingle from "./TagSelectSingle";
+import { SubmitButton } from "../button/Button";
+import { useCiToast } from "../../hooks/Toast";
+import DataUpdateContext from "../../context/DataUpdateContext";
+import NameInput from "../input/NameInput";
+import { patchTag, postTag } from "../../services/tagService";
 
-export default function TagForm() {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [data, setData] = useState([]);
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-    postTag(data);
-  };
+export default function TagForm({ type, id, data }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  const toast = useCiToast();
+  const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
+  let onSubmit;
 
-  useEffect(() => {
-    getTags().then(
-      (d) => {
-        setIsLoaded(true);
-        setData(d);
-      },
-      (e) => {
-        setIsLoaded(true);
-        setError(e);
-      }
-    );
-  }, []);
-
-  if (error) {
-    return <Alert status="error">{error.message}</Alert>;
-  } else if (!isLoaded) {
-    return <Spinner />;
+  if (type === "edit") {
+    onSubmit = (data) => {
+      patchTag(id, data).then(
+        (data) => {
+          setLastUpdate(Date.now());
+          toast({
+            status: "success",
+            title: "Created",
+            description: `The datatype ${data.name} with the id ${data.id} has been updated`,
+          });
+        },
+        (err) => {
+          toast({
+            status: "error",
+            title: "Error",
+            description: err.message,
+          });
+        }
+      );
+    };
   } else {
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <FormLabel htmlFor="name">Name</FormLabel>
-          <Input name="name" placeholder="name" {...register("name")} />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="parent">Parent</FormLabel>
-          <Select
-            placeholder="Select tag"
-            name="parent"
-            {...register("parent", { valueAsNumber: true })}
-          >
-            {data.map((parent) => (
-              <option key={parent.id} value={parent.id}>
-                {parent.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Button type="submit">Submit</Button>
-      </form>
-    );
+    onSubmit = (data) => {
+      postTag(data).then(
+        (data) => {
+          setLastUpdate(Date.now());
+          toast({
+            status: "success",
+            title: "Created",
+            description: `The entity ${data.name} with the id ${data.id} has been created`,
+          });
+        },
+        (err) => {
+          toast({
+            status: "error",
+            title: "Error",
+            description: err.message,
+          });
+        }
+      );
+    };
   }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <NameInput
+        required
+        isInvalid={errors.name}
+        defaultValue={type === "edit" ? data.name : null}
+        errors={errors.name && errors.name.message}
+        {...register("name", { required: "Name is required!" })}
+      />
+      <TagSelectSingle
+        topMargin
+        {...register("parent", { valueAsNumber: true })}
+      />
+
+      <SubmitButton mt={4} isLoading={isSubmitting} />
+    </form>
+  );
 }
