@@ -16,6 +16,7 @@ import {
   useColorModeValue,
   Stack,
   useColorMode,
+  Image,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, MoonIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router";
@@ -33,19 +34,19 @@ const Links = [
 ];
 
 const NavLink = ({ children }) => (
-  <RouterLink to={children.link}>
-    <Link
-      px={2}
-      py={1}
-      rounded={"md"}
-      _hover={{
-        textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
-      }}
-    >
-      {children.name}
-    </Link>
-  </RouterLink>
+  <Link
+    as={RouterLink}
+    to={children.link}
+    px={2}
+    py={1}
+    rounded={"md"}
+    _hover={{
+      textDecoration: "none",
+      bg: useColorModeValue("gray.200", "gray.700"),
+    }}
+  >
+    {children.name}
+  </Link>
 );
 
 function logout(history) {
@@ -60,7 +61,12 @@ export default function Navbar() {
 
   return (
     <>
-      <Box width="100vw" bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box
+        borderBottomWidth={2}
+        borderBottomColor={useColorModeValue("teal.500", "teal.200")}
+        width="100vw"
+        px={4}
+      >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}
@@ -70,7 +76,14 @@ export default function Navbar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Box>Chaosinventory</Box>
+            <Box>
+              <Image
+                boxSize="50px"
+                objectFit="cover"
+                src="/assets/logo.png"
+                alt="Segun Adebayo"
+              />
+            </Box>
             <HStack
               as={"nav"}
               spacing={4}
@@ -83,11 +96,6 @@ export default function Navbar() {
           </HStack>
           <Flex alignItems={"center"}>
             <Menu>
-              <Switch
-                size="lg"
-                defaultChecked={colorMode}
-                onChange={toggleColorMode}
-              />
               <MenuButton
                 as={Button}
                 rounded={"full"}
@@ -97,6 +105,9 @@ export default function Navbar() {
                 <Avatar size={"sm"} />
               </MenuButton>
               <MenuList>
+                <MenuItem onClick={toggleColorMode}>
+                  Swtich to {colorMode === "light" ? "Dark" : "Light"} Mode
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     logout(history);
