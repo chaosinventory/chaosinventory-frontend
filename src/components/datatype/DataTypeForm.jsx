@@ -1,12 +1,13 @@
 import {
   FormLabel,
   FormControl,
+  FormErrorMessage,
   Input,
   Button,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import {
   patchDatatype,
@@ -14,21 +15,49 @@ import {
   putDatatype,
 } from "../../services/datatypeService";
 import PropTypes from "prop-types";
+import DataUpdateContext from "../../context/DataUpdateContext";
 
 function DataTypeForm({ type, id, data }) {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
   const toast = useToast();
+  const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
   let onSubmit;
 
   if (type === "edit") {
     onSubmit = (data) => {
-      console.log(data);
-      patchDatatype(id, data);
+      patchDatatype(id, data).then(
+        (data) => {
+          setLastUpdate(Date.now());
+          toast({
+            title: "Created",
+            description: `The datatype ${data.name} with the id ${data.id} has been updated`,
+            status: "success",
+            position: "top",
+            duration: 9000,
+            isClosable: true,
+          });
+        },
+        (err) => {
+          toast({
+            title: "Error",
+            description: err.message,
+            status: "error",
+            position: "top",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      );
     };
   } else {
     onSubmit = (data) => {
       postDatatype(data).then(
         (data) => {
+          setLastUpdate(Date.now());
           toast({
             title: "Created",
             description: `The datatype ${data.name} with the id ${data.id} has been created`,
@@ -54,26 +83,31 @@ function DataTypeForm({ type, id, data }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl>
+      <FormControl isInvalid={errors.name}>
         <FormLabel htmlFor="name">Name</FormLabel>
         <Input
           defaultValue={type === "edit" ? data.name : null}
           name="name"
-          placeholder="name"
-          {...register("name")}
+          placeholder="Name"
+          {...register("name", { required: "Name is required!" })}
         />
+        <FormErrorMessage>
+          {errors.name && errors.name.message}
+        </FormErrorMessage>
       </FormControl>
-      <FormControl>
+      <FormControl mt={4}>
         <FormLabel htmlFor="note">Note</FormLabel>
         <Textarea
           defaultValue={type === "edit" ? data.note : null}
           name="note"
-          placeholder="note"
+          placeholder="Note"
           {...register("note")}
         />
       </FormControl>
 
-      <Button type="submit">Submit</Button>
+      <Button mt={4} isLoading={isSubmitting} colorScheme="green" type="submit">
+        Submit
+      </Button>
     </form>
   );
 }

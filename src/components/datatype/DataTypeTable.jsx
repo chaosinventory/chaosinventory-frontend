@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   Spinner,
   Table,
@@ -17,16 +17,18 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { deleteDatatype, getDatatypes } from "../../services/datatypeService";
 import DataTypeForm from "./DataTypeForm";
+import DataUpdateContext from "../../context/DataUpdateContext";
 
 export default function DataTypeTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const [selectedData, setSelectedData] = useState({});
-  let [updateInc, setUpdateInc] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
 
   useEffect(() => {
     getDatatypes().then(
@@ -40,7 +42,7 @@ export default function DataTypeTable() {
         setError(err);
       }
     );
-  }, [updateInc]);
+  }, [lastUpdate]);
 
   if (error) {
     return (
@@ -54,7 +56,7 @@ export default function DataTypeTable() {
   } else {
     return (
       <>
-        <Table variant="simple">
+        <Table variant="simple" size="sm">
           <Thead>
             <Tr>
               <Th>Name</Th>
@@ -67,20 +69,28 @@ export default function DataTypeTable() {
               <Tr key={item.id}>
                 <Td>{item.name}</Td>
                 <Td>{item.note}</Td>
-                <Td>
+                <Td textAlign="right  ">
                   <Button
                     onClick={() => {
                       setSelectedData(item);
                       onOpen();
                     }}
+                    leftIcon={<EditIcon />}
+                    size="sm"
+                    colorScheme="blue"
+                    variant="ghost"
                   >
                     Edit
                   </Button>
                   <Button
                     onClick={() => {
                       deleteDatatype(item.id);
-                      setUpdateInc(updateInc + 1);
+                      setLastUpdate(Date.now());
                     }}
+                    leftIcon={<DeleteIcon />}
+                    size="sm"
+                    colorScheme="red"
+                    variant="ghost"
                   >
                     Delete
                   </Button>
