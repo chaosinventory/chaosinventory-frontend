@@ -11,7 +11,6 @@ export default function OverlayTable() {
   useEffect(() => {
     getOverlays().then(
       (data) => {
-        console.log(data);
         setIsLoaded(true);
         setItems(data);
       },

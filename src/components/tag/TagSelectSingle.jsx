@@ -44,7 +44,11 @@ export default function TagSelectSingle(props) {
     return (
       <FormControl mt={props.topMargin ? 4 : 0}>
         <FormLabel htmlFor="parent">Parent</FormLabel>
-        <Select placeholder="Select tag" name="parent" {...props}>
+        <Select
+          placeholder="Select tag"
+          name="parent"
+          {...props.registerFunction}
+        >
           {data.map((parent) => (
             <option key={parent.id} value={parent.id}>
               {parent.name}

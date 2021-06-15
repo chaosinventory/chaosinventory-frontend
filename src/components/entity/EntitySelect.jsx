@@ -6,18 +6,18 @@ import {
   Alert,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../../services/productService";
+import { getEntities } from "../../services/entityService";
 
-export default function ProductSelect(props) {
+export default function EntitySelect(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [entities, setEntities] = useState([]);
 
   useEffect(() => {
-    getProducts().then(
+    getEntities().then(
       (d) => {
         setIsLoaded(true);
-        setProducts(d);
+        setEntities(d);
       },
       (e) => {
         setIsLoaded(true);
@@ -34,14 +34,10 @@ export default function ProductSelect(props) {
     return (
       <FormControl mt={props.topMargin ? 4 : 0}>
         <FormLabel htmlFor={props.name}>{props.label}</FormLabel>
-        <Select
-          placeholder="Select product"
-          name={props.name}
-          {...props.registerFunction}
-        >
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
+        <Select placeholder="Select entity" {...props.registerFunction}>
+          {entities.map((entity) => (
+            <option key={entity.id} value={entity.id}>
+              {entity.name}
             </option>
           ))}
         </Select>

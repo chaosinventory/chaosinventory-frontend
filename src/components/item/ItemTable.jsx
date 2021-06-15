@@ -12,16 +12,19 @@ import {
   Td,
   HStack,
 } from "@chakra-ui/react";
+import { useContext } from "react";
+import DataUpdateContext from "../../context/DataUpdateContext";
 
 export default function ItemTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
+  const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
+
   useEffect(() => {
     getItems().then(
       (data) => {
-        console.log(data);
         setIsLoaded(true);
         setItems(data);
       },
@@ -30,7 +33,7 @@ export default function ItemTable() {
         setError(err);
       }
     );
-  }, []);
+  }, [lastUpdate]);
 
   if (error) {
     return (
@@ -43,7 +46,7 @@ export default function ItemTable() {
     return <Spinner />;
   } else {
     return (
-      <Table variant="simple">
+      <Table variant="simple" size="sm">
         <Thead>
           <Tr>
             <Th>Name</Th>
@@ -57,11 +60,11 @@ export default function ItemTable() {
         <Tbody>
           {items.map((item) => (
             <Tr key={item.id}>
-            <Td>{item.name}</Td>
-            <Td>{item.product.name}</Td>
-            <Td>{item.amount}</Td>
-            <Td>{item.actual_location.name}</Td>
-            <Td>{item.actual_item != null ? <>?</> : <>...</>}</Td>
+              <Td>{item.name}</Td>
+              <Td>{item.product.name}</Td>
+              <Td>{item.amount}</Td>
+              <Td>{item.actual_location.name}</Td>
+              <Td>{item.actual_item != null ? <>?</> : <>...</>}</Td>
             </Tr>
           ))}
         </Tbody>

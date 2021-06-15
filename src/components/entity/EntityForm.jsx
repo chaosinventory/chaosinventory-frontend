@@ -1,4 +1,3 @@
-import { Button } from "@chakra-ui/react";
 import React from "react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
@@ -7,7 +6,7 @@ import { patchEntity, postEntity } from "../../services/entityService";
 import NameInput from "../input/NameInput";
 import NoteInput from "../input/NoteInput";
 import { useCiToast } from "../../hooks/Toast";
-import ProductSelect from "../product/ProductSelect";
+import EntitySelect from "../entity/EntitySelect";
 import { SubmitButton } from "../button/Button";
 
 export default function EntityForm({ type, id, data }) {
@@ -42,6 +41,7 @@ export default function EntityForm({ type, id, data }) {
     };
   } else {
     onSubmit = (data) => {
+      console.log(data);
       postEntity(data).then(
         (data) => {
           setLastUpdate(Date.now());
@@ -78,11 +78,11 @@ export default function EntityForm({ type, id, data }) {
         errors={errors.note && errors.note.message}
         {...register("note")}
       />
-      <ProductSelect
+      <EntitySelect
         topMargin
         label="Part Of"
         name="part_of"
-        {...register("part_of", { valueAsNumber: true })}
+        registerFunction={register("part_of", { valueAsNumber: true })}
       />
 
       <SubmitButton mt={4} isLoading={isSubmitting} />

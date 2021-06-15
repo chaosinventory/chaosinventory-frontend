@@ -15,7 +15,6 @@ export default function LocationView(props) {
       getLocation(props.id).then(
         (result) => {
           setIsLoaded(true);
-          console.log(result);
           setData(result);
         },
         (error) => {

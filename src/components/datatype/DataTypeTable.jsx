@@ -34,7 +34,6 @@ export default function DataTypeTable() {
   useEffect(() => {
     getDatatypes().then(
       (data) => {
-        console.log(data);
         setIsLoaded(true);
         setItems(data);
       },

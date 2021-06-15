@@ -70,7 +70,7 @@ export default function TagForm({ type, id, data }) {
       />
       <TagSelectSingle
         topMargin
-        {...register("parent", { valueAsNumber: true })}
+        registerFunction={register("parent", { valueAsNumber: true })}
       />
 
       <SubmitButton mt={4} isLoading={isSubmitting} />

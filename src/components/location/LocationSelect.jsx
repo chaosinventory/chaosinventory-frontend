@@ -6,18 +6,18 @@ import {
   Alert,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../../services/productService";
+import { getLocations } from "../../services/locationService";
 
-export default function ProductSelect(props) {
+export default function LocationSelect(props) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [products, setProducts] = useState([]);
+  const [locations, setLocations] = useState([]);
 
   useEffect(() => {
-    getProducts().then(
+    getLocations().then(
       (d) => {
         setIsLoaded(true);
-        setProducts(d);
+        setLocations(d);
       },
       (e) => {
         setIsLoaded(true);
@@ -35,13 +35,13 @@ export default function ProductSelect(props) {
       <FormControl mt={props.topMargin ? 4 : 0}>
         <FormLabel htmlFor={props.name}>{props.label}</FormLabel>
         <Select
-          placeholder="Select product"
+          placeholder="Select location"
           name={props.name}
           {...props.registerFunction}
         >
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
+          {locations.map((location) => (
+            <option key={location.id} value={location.id}>
+              {location.name}
             </option>
           ))}
         </Select>

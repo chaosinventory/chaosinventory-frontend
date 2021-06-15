@@ -25,7 +25,6 @@ export default function EntityTable() {
   useEffect(() => {
     getEntities().then(
       (data) => {
-        console.log(data);
         setIsLoaded(true);
         setItems(data);
       },

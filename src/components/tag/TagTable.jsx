@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Spinner, Table, Thead, Tr, Th, Tbody, Td } from "@chakra-ui/react";
 import { getTags } from "../../services/tagService";
+import { useContext } from "react";
+import DataUpdateContext from "../../context/DataUpdateContext";
 
 export default function TagTable() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
+  const { lastUpdate, setLastUpdate } = useContext(DataUpdateContext);
+
   useEffect(() => {
     getTags().then(
       (data) => {
-        console.log(data);
         setIsLoaded(true);
         setItems(data);
       },
@@ -19,7 +22,7 @@ export default function TagTable() {
         setError(err);
       }
     );
-  }, []);
+  }, [lastUpdate]);
 
   if (error) {
     return (
@@ -32,7 +35,7 @@ export default function TagTable() {
     return <Spinner />;
   } else {
     return (
-      <Table width="100%">
+      <Table variant="simple" size="sm">
         <Thead>
           <Tr>
             <Th>Name</Th>

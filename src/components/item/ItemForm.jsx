@@ -52,6 +52,7 @@ export default function ItemForm({ type, id, data }) {
     };
   } else {
     onSubmit = (data) => {
+      console.log(data);
       postItem(data).then(
         (data) => {
           setLastUpdate(Date.now());
@@ -92,9 +93,9 @@ export default function ItemForm({ type, id, data }) {
         <FormLabel htmlFor="amount">Amount</FormLabel>
         <NumberInput
           name="amount"
-          {...register("amount")}
           defaultValue={1}
           min={1}
+          {...register("amount", { valueAsNumber: true })}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -107,7 +108,7 @@ export default function ItemForm({ type, id, data }) {
         topMargin
         label="Product type"
         name="product"
-        {...register("product", { valueAsNumber: true })}
+        registerFunction={register("product", { valueAsNumber: true })}
       />
 
       <SubmitButton mt={4} isLoading={isSubmitting} />

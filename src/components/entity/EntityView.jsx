@@ -16,7 +16,6 @@ export default function EntityView(props) {
       getEntity(props.id).then(
         (result) => {
           setIsLoaded(true);
-          console.log(result);
           setData(result);
         },
         (error) => {

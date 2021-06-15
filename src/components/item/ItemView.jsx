@@ -18,7 +18,6 @@ export default function ItemView(props) {
       getItem(props.id).then(
         (result) => {
           setIsLoaded(true);
-          console.log(result);
           setData(result);
         },
         (error) => {
@@ -33,7 +32,6 @@ export default function ItemView(props) {
     } else if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
-      console.log(data);
       componentData = data;
     }
   } else {
