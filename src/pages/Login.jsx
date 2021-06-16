@@ -12,6 +12,16 @@ import {
 import React from "react";
 import { useHistory } from "react-router";
 import { authenticationService } from "../services/authenticationService";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import DataUpdateContext from "../context/DataUpdateContext";
+import { patchEntity, postEntity } from "../services/entityService";
+import NameInput from "../components/input/NameInput";
+import NoteInput from "../components/input/NoteInput";
+import { useCiToast } from "../hooks/Toast";
+import ProductSelect from "../components/product/ProductSelect";
+import { SubmitButton } from "../components/button/Button";
+import { patchItem, postItem } from "../services/itemService";
 
 function loginUser(event, history) {
   event.preventDefault();
@@ -23,11 +33,24 @@ function loginUser(event, history) {
 }
 
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
   let history = useHistory();
+  const toast = useCiToast();
+  const onSubmit = (data) => {
+    authenticationService.login(data.username, data.password).then(() => {
+      console.log("Login successful");
+      history.push("/items");
+    });
+  };
 
   return (
     <Flex
-      minH={"100vh"}
+      minH={"100%"}
+      minW={"100%"}
       align={"center"}
       justify={"center"}
       bg={useColorModeValue("blue.50", "blue.800")}
@@ -42,18 +65,24 @@ export default function Login() {
           boxShadow={"lg"}
           p={8}
         >
-          <form onSubmit={(e) => loginUser(e, history)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={4}>
               <FormControl id="username">
                 <FormLabel>Username</FormLabel>
-                <Input type="username" name="username" placeholder="janedoe" />
+                <Input
+                  type="username"
+                  placeholder="janedoe"
+                  {...register("username", { required: "Name is required!" })}
+                />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
-                  name="password"
                   placeholder="*********"
+                  {...register("password", {
+                    required: "Password is required!",
+                  })}
                 />
               </FormControl>
               <Stack spacing={10}>

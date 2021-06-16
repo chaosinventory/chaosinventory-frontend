@@ -8,12 +8,15 @@ export const authenticationService = {
 };
 
 function login(username, password) {
-  postData("/api/authentication/token/credentials", {
-    username: username,
-    password: password,
-    application: "chaosinventory",
-  }).then((data) => {
-    localStorage.setItem(import.meta.env.VITE_TOKEN_NAME, data.token);
+  return new Promise((resolve, reject) => {
+    postData("/api/authentication/token/credentials", {
+      username: username,
+      password: password,
+      application: "chaosinventory",
+    }).then((data) => {
+      localStorage.setItem(import.meta.env.VITE_TOKEN_NAME, data.token);
+      resolve("foo");
+    });
   });
 }
 
