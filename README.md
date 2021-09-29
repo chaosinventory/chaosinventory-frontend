@@ -8,7 +8,9 @@ This is our official fancy stock frontend (TM), which you can use to manage your
 
 ### Prerequisites
 
-You should have nodejs installed on your system. At least node 12.x is needed, we recommend using the latest or latest LTS version.
+You should have nodejs installed on your system. At least node 12.x is needed, we recommend using the current stable LTS version (14.x at the moment).
+
+We usually test the build against all current and future LTS versions (=even numbers), which are 12.x, 14.x and 16.x.
 
 Information on how to install nodejs can be found [here](https://nodejs.org/en/).
 
