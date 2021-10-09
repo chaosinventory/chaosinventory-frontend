@@ -5,7 +5,8 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "ci-prettier": "prettier --check src/**/*"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.11",
